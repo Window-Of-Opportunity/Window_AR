@@ -1,10 +1,3 @@
-//
-//  Grid.swift
-//  NextReality_Tutorial8
-//
-//  Created by Ambuj Punn on 5/2/18.
-//  Copyright © 2018 Ambuj Punn. All rights reserved.
-//
 
 import Foundation
 import SceneKit

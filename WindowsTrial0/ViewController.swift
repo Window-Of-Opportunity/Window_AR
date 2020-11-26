@@ -15,6 +15,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
     var grids = [Grid]()
+    var wWidth = 0.3
+    var wHeight = 0.5
+    var wType = "Single_Hung_tall_and_skinny"
+    var uName = "Mustafa"
+    
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,9 +29,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Set the view's delegate
         sceneView.delegate = self
         
-        // Show statistics such as fps and timing information
-        sceneView.showsStatistics = true
-        sceneView.debugOptions = ARSCNDebugOptions.showFeaturePoints
+//        // Show statistics such as fps and timing information
+//        sceneView.showsStatistics = true
+//        sceneView.debugOptions = ARSCNDebugOptions.showFeaturePoints
         
         // Create a new scene
         let scene = SCNScene()
@@ -32,22 +39,62 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Set the scene to the view
         sceneView.scene = scene
         
-        //adding gesture for tap
-        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
+        //adding gesture for tap selector in objc runtime for func touched
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(touched))
         sceneView.addGestureRecognizer(gestureRecognizer)
+        
+//        getAPI
+//        set width and height of window
+        
+//        let url = "https://some-random-api.ml/facts/cat"
+//        getData(from: url)
     }
     
+//    private func getData(from url: String) {
+//        let task = URLSession.shared.dataTask(with: URL(string: url)!, completionHandler: {data, response, error in
+//            guard let data = data, error == nil else {
+//                print("somthing went wrong")
+//                return
+//            }
+//            //recieved data in bytes do json decoding
+//            var result: Response?
+//            do {
+//                result = try JSONDecoder().decode(Response.self, from: data)
+//            }
+//            catch {
+//                print("failed to convert")
+//
+//            }
+//
+//            guard let json = result else {
+//                return
+//            }
+//
+//
+//            print(json.window.type)
+//            print(json.window.width)
+//            print(json.window.height)
+//            print(json.user.name)
+//
+//            self.wWidth = json.window.width
+//            self.wHeight = json.window.height
+//            self.wType = json.window.type
+//            self.uName = json.user.name
+//        })
+//        task.resume() //fires request
+//    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         // Create a session configuration
-        let configuration = ARWorldTrackingConfiguration()
+        let config = ARWorldTrackingConfiguration()
         
         //turn on vertical plane detection
-        configuration.planeDetection = .vertical
+        config.planeDetection = [.vertical, .horizontal]
 
         // Run the view's session
-        sceneView.session.run(configuration)
+        sceneView.session.run(config)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -57,16 +104,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.session.pause()
     }
 
-    // MARK: - ARSCNViewDelegate
-    
-/*
-    // Override to create and configure nodes for anchors added to the view's session.
-    func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-        let node = SCNNode()
-     
-        return node
-    }
-*/
+
+   
     
     func session(_ session: ARSession, didFailWithError error: Error) {
         // Present an error message to the user
@@ -83,6 +122,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
     }
     
+    //Rework***
+    
     //ARAnchor is a 2D surface that ARkit detects in physical environment
     
    // didAdd() called when new node is aggregated to ARSCNView checks if grid is vertical and then adds it to the Grid array
@@ -93,6 +134,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.grids.append(grid)
         node.addChildNode(grid)
     }
+    
     //didUpdate called when newer ARPlanceAnchor nodes are detected and also check if grid is vertical
     
     
@@ -105,25 +147,69 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         foundGrid.update(anchor: planeAnchor)
     }
     
-    @objc func tapped(gesture:UITapGestureRecognizer) {
-        //get xy position of tapped location
-        let touchPosition = gesture.location(in: sceneView)
+    @objc func touched(gesture:UITapGestureRecognizer) {
+        //get xy position of tapped location in sceneView
+        let loc = gesture.location(in: sceneView)
 
         //use hitTest to make xy coordinated to xyz plane
-        let hitTestResults = sceneView.hitTest(touchPosition, types: .existingPlaneUsingExtent)
+        let hitTestResults = sceneView.hitTest(loc, types: .existingPlaneUsingExtent)
         
         //Get hitTestResults
         guard let hitTest = hitTestResults.first,
+              //Might be nil as?
         let anchor = hitTest.anchor as? ARPlaneAnchor,
+        // using $0 for first argument shorthand
         let gridIndex = grids.index(where: { $0.anchor == anchor } ) else {return}
-        addPainting(hitTest, grids[gridIndex])
+        //addPainting(hitTest, grids[gridIndex])
+        loadWindow(hitResult: hitTest, grid: grids[gridIndex],theWidth: 26,theHeight: 48,type: "singlehung" )
     }
+    //23 1/4 by 20 1/4
+    //19.5/38
+    func loadWindow( hitResult: ARHitTestResult,  grid: Grid, theWidth: Double, theHeight: Double, type: String){
+            // set the plane that the image will fill
+            //type will be the first part of the name of the window image.
+            let ratioNum = theWidth/theHeight
+            var imageName = type
+            // ratioNum < .8 use tall and skinny (t)all
+            // ratioNum > 1.25 use short and wide (w)ide
+            // ratioNum in between then use square (s)quare
+            // singlehungt, singlehungw, singlehungs
+
+        let planeGeometry = SCNPlane(width: CGFloat(theWidth*0.025), height: CGFloat(theHeight*0.025))
+            let material = SCNMaterial()
+            if(ratioNum < 0.8){
+                imageName = imageName + "t"
+            }
+            else if(ratioNum > 1.25){
+                imageName = imageName + "w"
+            }
+            else {
+                imageName = imageName + "s"
+            }
+        
+            material.diffuse.contents = UIImage(named: imageName)
+            planeGeometry.materials = [material]
+
+
+            let paintingNode = SCNNode(geometry: planeGeometry)
+                   paintingNode.transform = SCNMatrix4(hitResult.anchor!.transform)
+                   paintingNode.eulerAngles = SCNVector3(paintingNode.eulerAngles.x + (-Float.pi / 2), paintingNode.eulerAngles.y,paintingNode.eulerAngles.z)
+                   paintingNode.position = SCNVector3(hitResult.worldTransform.columns.3.x, hitResult.worldTransform.columns.3.y, hitResult.worldTransform.columns.3.z)
+
+                   sceneView.scene.rootNode.addChildNode(paintingNode)
+                   grid.removeFromParentNode()
+
+        }
+
     
     func addPainting(_ hitResult: ARHitTestResult, _ grid: Grid) {
         //first painting
-        let planeGeometry = SCNPlane(width: 0.5, height: 0.7 )
+        //get api width and height, then change planegeometry of SCNPLANE
+        //if width > height then use wide png, if width = height use square png, else width < height use tall png
+        let planeGeometry = SCNPlane(width: 0.30, height: 0.60)
         let material = SCNMaterial()
-        material.diffuse.contents = UIImage(named: "wood-window")
+        //use api to configure which type of window is displayed
+        material.diffuse.contents = UIImage(named: wType)
         planeGeometry.materials = [material]
         
        
@@ -137,3 +223,42 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
 }
+
+
+
+struct Response: Codable{
+    let window: MyWindow
+    let user: MyUser
+}
+
+struct MyWindow: Codable{
+      let type: String
+      let width: Double
+      let height: Double
+}
+
+struct MyUser: Codable{
+      let name: String
+}
+
+
+//API DATA Format
+
+/*
+{
+ window: {
+    type: "t"
+    width: "x"
+    height: "y"
+ },
+ user: {
+    name: "name"
+ }
+ */
+
+
+
+
+
+
+
