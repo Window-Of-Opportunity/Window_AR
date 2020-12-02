@@ -171,7 +171,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
     }
     
-    //Rework***
     
     //ARAnchor is a 2D surface that ARkit detects in physical environment
     
@@ -252,7 +251,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     
     func addPainting(_ hitResult: ARHitTestResult, _ grid: Grid) {
-        //first painting
+    
         //get api width and height, then change planegeometry of SCNPLANE
         //if width > height then use wide png, if width = height use square png, else width < height use tall png
         let planeGeometry = SCNPlane(width: 0.30, height: 0.60)
@@ -314,98 +313,3 @@ struct MyUser: Codable{
  }
  */
 
-
-
-
-
-
-
-//
-//    private func getData(from url: String) {
-//        let user = aToken(access_token: "12345",
-//                          refresh_token: "hi")
-//        guard let uploadData = try? JSONEncoder().encode(user) else {
-//            return
-//        }
-////        let task = URLSession.shared.dataTask(with: URL(string: url)!, completionHandler: {data, response, error in
-////            guard let data = data, error == nil else {
-////                print(error)
-////                return
-////            }
-////
-//            //recieved data in bytes do json decoding
-//
-////            let access_token: String
-////            let refresh_token: String
-////
-////
-//
-//            var result: Response?
-//            do {
-//
-//
-//            }
-//            catch let error{
-//                print(error)
-//
-//            if let jsonString = String(data: data, encoding: .utf8) {
-//                print(jsonString)
-//            }
-//
-//            }
-//
-//            guard let json = result else {
-//                return
-//            }
-
-            //print(json)
-//            print(json.window.type)
-//            print(json.window.width)
-//            print(json.window.height)
-//            print(json.user.name)
-//
-//            self.wWidth = json.window.width
-//            self.wHeight = json.window.height
-//            self.wType = json.window.type
-//            self.uName = json.user.name
-//        })
-//        task.resume() //fires request
-//    }
-
-//        let user = aToken(access_token: "12345",
-//                          refresh_token: "hi")
-//        guard let uploadData = try? JSONEncoder().encode(user) else {
-//            return
-//
-//
-        
-//        let userCredential = URLCredential(user: user,
-//                                           password: password,
-//                                           persistence: .permanent)
-        
-//            let json: [String: Any] = ["username": uName,
-//                                       "password": uPassword]
-//
-//            let jsonData = try? JSONSerialization.data(withJSONObject: json)
-//
-//            // create post request
-//            let url = URL(string: "http://back-woop.herokuapp.com/login")!
-//            var request = URLRequest(url: url)
-//            request.httpMethod = "POST"
-//            let accessToken = "your access token"
-//            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-//            // insert json data to the request
-//            request.httpBody = jsonData
-//
-//            let task = URLSession.shared.dataTask(with: request) { data, response, error in
-//                guard let data = data, error == nil else {
-//                    print(error?.localizedDescription ?? "No data")
-//                    return
-//                }
-//                let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
-//                if let responseJSON = responseJSON as? [String: Any] {
-//                    print(responseJSON)
-//                }
-//            }
-//
-//            task.resume()
