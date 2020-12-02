@@ -48,43 +48,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 //        getAPI
 //        set width and height of window
         
-//        let user = aToken(access_token: "12345",
-//                          refresh_token: "hi")
-//        guard let uploadData = try? JSONEncoder().encode(user) else {
-//            return
-//
-//
-        
-//        let userCredential = URLCredential(user: user,
-//                                           password: password,
-//                                           persistence: .permanent)
-        
-//            let json: [String: Any] = ["username": uName,
-//                                       "password": uPassword]
-//
-//            let jsonData = try? JSONSerialization.data(withJSONObject: json)
-//
-//            // create post request
-//            let url = URL(string: "http://back-woop.herokuapp.com/login")!
-//            var request = URLRequest(url: url)
-//            request.httpMethod = "POST"
-//            let accessToken = "your access token"
-//            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-//            // insert json data to the request
-//            request.httpBody = jsonData
-//
-//            let task = URLSession.shared.dataTask(with: request) { data, response, error in
-//                guard let data = data, error == nil else {
-//                    print(error?.localizedDescription ?? "No data")
-//                    return
-//                }
-//                let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
-//                if let responseJSON = responseJSON as? [String: Any] {
-//                    print(responseJSON)
-//                }
-//            }
-//
-//            task.resume()
+
         
         postAction()
       
@@ -102,9 +66,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         guard let httpBody = try? JSONSerialization.data(withJSONObject: parameterDictionary, options: []) else {
             return
         }
-//        guard let uploadData = try? JSONEncoder().encode(user) else {
-//            return
-//        }
+
         request.httpBody = httpBody
         
         let session = URLSession.shared
@@ -143,10 +105,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
          request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
          request.setValue("Application/json", forHTTPHeaderField: "Accept")
 
- //        guard let uploadData = try? JSONEncoder().encode(user) else {
- //            return
- //        }
-         
+
          let session = URLSession.shared
          session.dataTask(with: request) { (data, response, error) in
              if let response = response {
@@ -360,6 +319,7 @@ struct MyUser: Codable{
 
 
 
+
 //
 //    private func getData(from url: String) {
 //        let user = aToken(access_token: "12345",
@@ -411,3 +371,41 @@ struct MyUser: Codable{
 //        })
 //        task.resume() //fires request
 //    }
+
+//        let user = aToken(access_token: "12345",
+//                          refresh_token: "hi")
+//        guard let uploadData = try? JSONEncoder().encode(user) else {
+//            return
+//
+//
+        
+//        let userCredential = URLCredential(user: user,
+//                                           password: password,
+//                                           persistence: .permanent)
+        
+//            let json: [String: Any] = ["username": uName,
+//                                       "password": uPassword]
+//
+//            let jsonData = try? JSONSerialization.data(withJSONObject: json)
+//
+//            // create post request
+//            let url = URL(string: "http://back-woop.herokuapp.com/login")!
+//            var request = URLRequest(url: url)
+//            request.httpMethod = "POST"
+//            let accessToken = "your access token"
+//            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+//            // insert json data to the request
+//            request.httpBody = jsonData
+//
+//            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+//                guard let data = data, error == nil else {
+//                    print(error?.localizedDescription ?? "No data")
+//                    return
+//                }
+//                let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
+//                if let responseJSON = responseJSON as? [String: Any] {
+//                    print(responseJSON)
+//                }
+//            }
+//
+//            task.resume()
